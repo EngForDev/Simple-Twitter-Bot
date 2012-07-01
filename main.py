@@ -11,7 +11,7 @@ from oauthtwitter import *
 #debug_flag = True
 debug_flag = False
 MAX_LEN = 140
-SEARCH_TERM = u'Cafe Miyama'
+SEARCH_TERM = u'engfordev'
 CONSUMER_KEY    = "???"
 CONSUMER_SECRET = "???"
 KEY_FILE_API    = "api_key.dat"
@@ -22,7 +22,7 @@ BOT_USERNAME = "CafeMiyamaBot"
 def oauth_twitter():
    access_token = pickle.load(file(KEY_FILE_API))
    return OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
-                                                                      
+
 # twitter.Api.__init__ method for override.
 def twitter_api_init_gae(self,
                        username=None,
@@ -43,7 +43,7 @@ def twitter_api_init_gae(self,
 
 def run(search_term):
    acc_token = pickle.load(file(KEY_FILE_API))
-   gae_twitter = AppEngineTwitter()   
+   gae_twitter = AppEngineTwitter()
    gae_twitter.set_oauth(CONSUMER_KEY,
                          CONSUMER_SECRET,
                          acc_token.key,
@@ -53,7 +53,7 @@ def run(search_term):
    api = oauth_twitter() #twitter.Api(username=bot_username, password=bot_password)
    escape_user_list = []
    escape_user_list.append(BOT_USERNAME)
-   
+
    # Get most corrently tweeted tweet
    status = api.GetUserTimeline()
 
@@ -62,7 +62,7 @@ def run(search_term):
       hoge = api.GetReplies()
       for h in hoge:
          print h
-   
+
    for s in status:
       if s.text.startswith("RT"):
          recent_tweet = s.text
@@ -71,7 +71,7 @@ def run(search_term):
          print "The following tweet would be posted by hand, so skipped it."
          print "Tweet: " + s.text.encode('utf8')
          print
-      
+
    print "Recent Tweet: "+recent_tweet.encode('utf8')
    print
 
@@ -82,8 +82,8 @@ def run(search_term):
       rt = "RT [at]" + result['from_user']  + " " + result['text']
       rt_len = len(rt)
       if debug_flag:
-         print "[Debug] rt["+str(i)+"]: " + rt.encode('utf8') 
-      
+         print "[Debug] rt["+str(i)+"]: " + rt.encode('utf8')
+
       if flag_enable:
          print "I am going to tweet the tweet above."
          if rt_len > MAX_LEN:
@@ -104,7 +104,7 @@ def run(search_term):
             print "I have re-tweeted: "+rt.encode('utf8')
             print "Result of my re-tweeting: " + str(gae_twitter.update(rt.encode('utf8')))
          exit()
-               
+
       if recent_tweet.replace("@", "[at]") == rt.replace("@", "[at]"):
          if debug_flag:
             print "My Most Recent Tweet: " + recent_tweet.encode('utf8')
@@ -119,11 +119,11 @@ def run(search_term):
    print
 #   print "results: ",
 #   print str(results)
-   for i,result in enumerate(results):  
-      rt = "RT [at]" + result['from_user']  + " " + result['text']  
+   for i,result in enumerate(results):
+      rt = "RT [at]" + result['from_user']  + " " + result['text']
       rt_len = len(rt)
       if debug_flag:
-         print "[Debug] rt["+str(i)+"]: " + rt.encode('utf8') 
+         print "[Debug] rt["+str(i)+"]: " + rt.encode('utf8')
 
       print "I am going to tweet the tweet above."
       if rt_len > MAX_LEN:
