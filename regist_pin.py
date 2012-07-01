@@ -22,13 +22,13 @@ def twitter():
         print
         print "If you did your registration correctly, you can see some numbers"
         print "(If not, maybe you had not chosen client type during Twitter OAuth registration)"
-        print 
+        print
         tw = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, request_token)
         oauth_verifier = raw_input("What is the number(PIN)? ")
         access_token = tw.getAccessTokenWithPin(oauth_verifier)
         print "Finished setting OAuth configuration."
         print "Now, you can use OAuth. Enjoy!"
-    
+
     pickle.dump(access_token, file(KEY_FILE_API, "w"))
     return OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
 
@@ -36,9 +36,9 @@ def main(args):
     tw = twitter()
     if len(args) < 2:
         for status in tw.GetFriendsTimeline(count=20):
-            print status.GetUser().GetScreenName() + ":", status.GetText().encode("cp932", "replace")
+            print status.GetUser().GetScreenName() + ":", status.GetText()
     else:
         post = " ".join(args[1:])
-        tw.PostUpdate(post.decode("cp932").encode("utf-8"))
+        tw.PostUpdate(post)
 
 if __name__ == "__main__": main(sys.argv)
