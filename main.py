@@ -12,11 +12,11 @@ from oauthtwitter import *
 debug_flag = False
 MAX_LEN = 140
 SEARCH_TERM = u'engfordev'
-CONSUMER_KEY    = "???"
-CONSUMER_SECRET = "???"
+CONSUMER_KEY    = "** REPLACE HERE **"
+CONSUMER_SECRET = "** REPLACE HERE **"
 KEY_FILE_API    = "api_key.dat"
 
-BOT_USERNAME = "CafeMiyamaBot"
+BOT_USERNAME = "engfordev"
 
 
 def oauth_twitter():
@@ -68,6 +68,7 @@ def run(search_term):
          recent_tweet = s.text
          break
       else:
+         recent_tweet = ""
          print "The following tweet would be posted by hand, so skipped it."
          print "Tweet: " + s.text.encode('utf8')
          print
@@ -79,7 +80,7 @@ def run(search_term):
    results.reverse()
    flag_enable = 0
    for i,result in enumerate(results):
-      rt = "RT [at]" + result['from_user']  + " " + result['text']
+      rt = "RT @" + result['from_user']  + " " + result['text']
       rt_len = len(rt)
       if debug_flag:
          print "[Debug] rt["+str(i)+"]: " + rt.encode('utf8')
@@ -92,7 +93,7 @@ def run(search_term):
          if result['from_user'] in escape_user_list:
             print "But, this tweet above is tweeted by Escape User, so skipped it."
             continue
-         if result['text'].startswith('@'):
+         if (not result['text'].startswith('@'+BOT_USERNAME)) and result['text'].startswith('@'):
             print "But, this tweet above starts with '@', so skipped it."
             continue
          """
@@ -105,7 +106,7 @@ def run(search_term):
             print "Result of my re-tweeting: " + str(gae_twitter.update(rt.encode('utf8')))
          exit()
 
-      if recent_tweet.replace("@", "[at]") == rt.replace("@", "[at]"):
+      if recent_tweet == rt:
          if debug_flag:
             print "My Most Recent Tweet: " + recent_tweet.encode('utf8')
             print "-----------------------------------------------------"
@@ -120,7 +121,7 @@ def run(search_term):
 #   print "results: ",
 #   print str(results)
    for i,result in enumerate(results):
-      rt = "RT [at]" + result['from_user']  + " " + result['text']
+      rt = "RT @" + result['from_user']  + " " + result['text']
       rt_len = len(rt)
       if debug_flag:
          print "[Debug] rt["+str(i)+"]: " + rt.encode('utf8')
@@ -132,7 +133,7 @@ def run(search_term):
       if result['from_user'] in escape_user_list:
          print "But, this tweet above is tweeted by Escape User, so skipped it."
          continue
-      if result['text'].startswith('@'):
+      if (not result['text'].startswith('@'+BOT_USERNAME)) and result['text'].startswith('@'):
          print "But, this tweet above starts with '@', so skipped it."
          continue
       """
@@ -142,7 +143,10 @@ def run(search_term):
          print "Next Tweet: "+rt.encode('utf8')
       else:
          print "I have tweeted: "+rt.encode('utf8')
-         print "Result of my re-tweeting: " + str(gae_twitter.update(rt.encode('utf8')))
+         status = str(gae_twitter.update(rt.encode('utf8')))
+         print "Result of my re-tweeting: " + status
+         if status != "200":
+            continue
       exit()
 
 # overriding API __init__
